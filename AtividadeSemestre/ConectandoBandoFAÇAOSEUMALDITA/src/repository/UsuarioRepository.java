@@ -21,27 +21,28 @@ public class UsuarioRepository {
 		try {
 			this.conexao = DriverManager.getConnection(CONNECTION_STRING, USUARIO, SENHA);
 			if (!this.conexao.isClosed()) {
-				System.out.println("A conex„o foi estabelecida com sucesso!");
+				System.out.println("A conex√£o foi estabelecida com sucesso!");
 			} else {
-				System.out.println("N„o foi possÌvel estabelecer a conex„o com o BD!");
+				System.out.println("N√£o foi poss√≠vel estabelecer a conex√£o com o BD!");
 			}
 		} catch (SQLException e) {
-			System.out.println("N„o foi possÌvel se conectar com o BD!");
+			System.out.println("N√£o foi poss√≠vel se conectar com o BD!");
 			e.printStackTrace();
 		}
 	}
 
 	public void inserir(Usuario usuario) {
-		String sql = "INSERT INTO tb_usuarios (ID_Usuario, nome, cpf) VALUES (?, ?, ?);";
+		String sql = "INSERT INTO tb_usuarios (ID_Usuario, nome, cpf, idade) VALUES (?, ?, ?, ?);";
 		try (PreparedStatement ps = this.conexao.prepareStatement(sql)) {
 			ps.setInt(1, usuario.getId());
 			ps.setString(2, usuario.getNome());
 			ps.setString(3, usuario.getCpf());
+			ps.setInt(4, usuario.getIdade());
 			ps.execute();
 		} catch (SQLIntegrityConstraintViolationException e) {
-			System.out.println("Usu·rio " + usuario.getNome() + " n„o foi inserido no Banco de dados devido a duplicidade de dados!");
+			System.out.println("Usu√°rio " + usuario.getNome() + " n√£o foi inserido no Banco de dados devido a duplicidade de dados!");
 		} catch (SQLException e) {
-			System.out.println("Usu·rio n„o foi inserido no banco de dados");
+			System.out.println("Usu√°rio n√£o foi inserido no banco de dados");
 			e.printStackTrace();
 		}
 	}
@@ -58,16 +59,17 @@ public class UsuarioRepository {
 	}
 
 	public void atualizar(Usuario usuario) {
-		String sql = "update tb_usuarios set nome=?, cpf = ? where ID_Usuario = ?";
+		String sql = "UPDATE tb_usuarios SET nome=?, cpf=?, idade=? WHERE ID_Usuario = ?";
 		try {
 			PreparedStatement ps = this.conexao.prepareStatement(sql);
 			ps.setString(1, usuario.getNome());
 			ps.setString(2, usuario.getCpf());
-			ps.setInt(3, usuario.getId());
+			ps.setInt(3, usuario.getIdade());
+			ps.setInt(4, usuario.getId());
 			ps.execute();
 			System.out.println("Os dados foram atualizados com sucesso");
 		} catch (SQLException e) {
-			System.out.println("N„o foi possÌvel atualizar os dados do usu·rio");
+			System.out.println("N√£o foi poss√≠vel atualizar os dados do usu√°rio");
 			e.printStackTrace();
 		}
 	}
@@ -84,6 +86,7 @@ public class UsuarioRepository {
 				usuarioConsultado.setId(rs.getInt("ID_Usuario"));
 				usuarioConsultado.setNome(rs.getString("nome"));
 				usuarioConsultado.setCpf(rs.getString("cpf"));
+				usuarioConsultado.setIdade(rs.getInt("idade"));
 			}
 			rs.close();
 		} catch (SQLException e) {
@@ -91,7 +94,7 @@ public class UsuarioRepository {
 		}
 		return usuarioConsultado;
 	}
-	
+
 	public Usuario consultarPorId(int id) {
 		String sql = "SELECT * FROM tb_usuarios WHERE ID_Usuario = ?;";
 		Usuario usuarioConsultado = null;
@@ -104,6 +107,7 @@ public class UsuarioRepository {
 				usuarioConsultado.setId(rs.getInt("ID_Usuario"));
 				usuarioConsultado.setNome(rs.getString("nome"));
 				usuarioConsultado.setCpf(rs.getString("cpf"));
+				usuarioConsultado.setIdade(rs.getInt("idade"));
 			}
 			rs.close();
 		} catch (SQLException e) {
@@ -111,34 +115,10 @@ public class UsuarioRepository {
 		}
 		return usuarioConsultado;
 	}
-	
-	public List<Usuario> consultarPorIniciais(String iniciais) {
-	    String sql = "SELECT * FROM tb_usuarios WHERE nome LIKE ?;";
-	    List<Usuario> usuarios = new ArrayList<>();
 
-	    try {
-	        PreparedStatement ps = this.conexao.prepareStatement(sql);
-	        ps.setString(1, iniciais + "%");
-	        ResultSet rs = ps.executeQuery();
-
-	        while (rs.next()) {
-	            Usuario usuario = new Usuario();
-	            usuario.setId(rs.getInt("ID_Usuario"));
-	            usuario.setNome(rs.getString("nome"));
-	            usuario.setCpf(rs.getString("cpf"));
-	            usuarios.add(usuario);
-	        }
-	        rs.close();
-	    } catch (SQLException e) {
-	        e.printStackTrace();
-	    }
-	    return usuarios;
-	}
-
-	
 	public List<Usuario> retornaTodos(){
 		List<Usuario> usuarios = new ArrayList<>();
-		String sql = "Select ID_Usuario, nome, cpf from tb_usuarios order by nome asc";
+		String sql = "SELECT ID_Usuario, nome, cpf, idade FROM tb_usuarios ORDER BY nome ASC";
 		try {
 			PreparedStatement ps = this.conexao.prepareStatement(sql);
 			ResultSet rs = ps.executeQuery();
@@ -147,17 +127,36 @@ public class UsuarioRepository {
 				usuario.setId(rs.getInt("ID_Usuario"));
 				usuario.setCpf(rs.getString("cpf"));
 				usuario.setNome(rs.getString("nome"));
+				usuario.setIdade(rs.getInt("idade"));
 				usuarios.add(usuario);
 			}
 		} catch (SQLException e) {
-			System.out.println("N„o foi possivel realizar a pesquisa");
+			System.out.println("N√£o foi possivel realizar a pesquisa");
 			e.printStackTrace();
 		}
 		return usuarios;
 	}
-	
-	public List<Usuario> pesquisaPorInicial(String inicial){
-		//implementar
-		return null;
+
+	public List<Usuario> consultarPorIniciais(String iniciais) {
+		String sql = "SELECT * FROM tb_usuarios WHERE nome LIKE ?;";
+		List<Usuario> usuarios = new ArrayList<>();
+
+		try {
+			PreparedStatement ps = this.conexao.prepareStatement(sql);
+			ps.setString(1, iniciais + "%");
+			ResultSet rs = ps.executeQuery();
+
+			while (rs.next()) {
+				Usuario usuario = new Usuario();
+				usuario.setId(rs.getInt("ID_Usuario"));
+				usuario.setNome(rs.getString("nome"));
+				usuario.setCpf(rs.getString("cpf"));
+				usuarios.add(usuario);
+			}
+			rs.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return usuarios;
 	}
 }

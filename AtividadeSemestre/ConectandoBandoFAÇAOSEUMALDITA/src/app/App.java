@@ -44,7 +44,7 @@ public class App {
 					System.out.println("Saiu...");
 					break;
 				default:
-					System.out.println("Opção inválida. Tente novamente.");
+					System.out.println("Opï¿½ï¿½o invï¿½lida. Tente novamente.");
 			}
 		} while (opcao != 7);
 		scanner.close();
@@ -52,18 +52,18 @@ public class App {
 
 	private static void exibirMenu() {
 		System.out.println("\n==== MENU ====");
-		System.out.println("1 - Cadastrar Usuário");
-		System.out.println("2 - Editar Usuário");
-		System.out.println("3 - Remover Usuário");
+		System.out.println("1 - Cadastrar Usuï¿½rio");
+		System.out.println("2 - Editar Usuï¿½rio");
+		System.out.println("3 - Remover Usuï¿½rio");
 		System.out.println("4 - Consultar todos os cadastros");
 		System.out.println("5 - Consultar pelo CPF");
 		System.out.println("6 - Consultar todos os cadastros pelas iniciais do nome");
 		System.out.println("7 - Sair");
-		System.out.print("Escolha uma opção: ");
+		System.out.print("Escolha uma opï¿½ï¿½o: ");
 	}
 
 	private static void cadastrarUsuario(UsuarioService service, Scanner scanner) {
-		System.out.println("\nCadastro de Usuário");
+		System.out.println("\nCadastro de Usuï¿½rio");
 		System.out.print("Digite o ID: ");
 		
 		int id;
@@ -84,18 +84,18 @@ public class App {
 
 		try {
 			service.cadastrar(usuario);
-			System.out.println("Usuário cadastrado com sucesso!");
+			System.out.println("Usuï¿½rio cadastrado com sucesso!");
 		} catch (Exception e) {
-			System.out.println("Erro ao cadastrar usuário: " + e.getMessage());
+			System.out.println("Erro ao cadastrar usuï¿½rio: " + e.getMessage());
 		}
 	}
 
 	private static void removerUsuario(UsuarioRepository repository, Scanner scanner) {
-		System.out.println("\nRemover Usuário");
+		System.out.println("\nRemover Usuï¿½rio");
 		List<Usuario> listaUsuarios = repository.retornaTodos();
 
 		if (listaUsuarios.isEmpty()) {
-			System.out.println("Nenhum usuário cadastrado.");
+			System.out.println("Nenhum usuï¿½rio cadastrado.");
 			return;
 		}
 
@@ -103,33 +103,33 @@ public class App {
 			System.out.println(usuario.imprimir());
 		}
 
-		System.out.print("Digite o ID do usuário a ser removido: ");
+		System.out.print("Digite o ID do usuï¿½rio a ser removido: ");
 		int idEscolhido = scanner.nextInt();
 		scanner.nextLine();
 
 		Usuario usuario = repository.consultarPorId(idEscolhido);
 		if (usuario == null) {
-			System.out.println("Usuário não encontrado.");
+			System.out.println("Usuï¿½rio nï¿½o encontrado.");
 			return;
 		}
 
-		System.out.print("Deseja realmente remover o usuário? (S/N): ");
+		System.out.print("Deseja realmente remover o usuï¿½rio? (S/N): ");
 		String escolha = scanner.nextLine();
 
 		if (escolha.equalsIgnoreCase("S")) {
 			repository.excluir(usuario);
-			System.out.println("Usuário removido com sucesso!");
+			System.out.println("Usuï¿½rio removido com sucesso!");
 		} else {
-			System.out.println("Remoção cancelada.");
+			System.out.println("Remoï¿½ï¿½o cancelada.");
 		}
 	}
 
 	private static void consultarTodos(UsuarioRepository repository) {
-		System.out.println("\nConsulta de Todos os Usuários");
+		System.out.println("\nConsulta de Todos os Usuï¿½rios");
 		List<Usuario> listaUsuarios = repository.retornaTodos();
 
 		if (listaUsuarios.isEmpty()) {
-			System.out.println("Nenhum usuário cadastrado.");
+			System.out.println("Nenhum usuï¿½rio cadastrado.");
 		} else {
 			for (Usuario usuario : listaUsuarios) {
 				System.out.println(usuario.imprimir());
@@ -146,7 +146,7 @@ public class App {
 		if (usuario != null) {
 			System.out.println(usuario.imprimir());
 		} else {
-			System.out.println("Usuário não encontrado.");
+			System.out.println("Usuï¿½rio nï¿½o encontrado.");
 		}
 	}
 	@SuppressWarnings("unused")
@@ -164,7 +164,6 @@ public class App {
 	    if (repository.consultarPorId(id) != null) {
 	        System.out.print("Digite o CPF novo: ");
 	        String cpf = scanner.nextLine().trim();
-
 	        System.out.print("Digite o Nome novo: ");
 	        String nome = scanner.nextLine().trim();
 
@@ -172,28 +171,25 @@ public class App {
 
 	        try {
 	            service.atualizar(usuario);
-	            System.out.println("Usuário atualizado com sucesso!");
+	            System.out.println("Usuï¿½rio atualizado com sucesso!");
 	        } catch (Exception e) {
-	            System.out.println("Erro ao atualizar usuário: " + e.getMessage());
+	            System.out.println("Erro ao atualizar usuï¿½rio: " + e.getMessage());
 	        }
 	    } else {
-	        System.out.println("Esse ID não existe no sistema!");
+	        System.out.println("Esse ID nï¿½o existe no sistema!");
 	    }
 	}
 	private static void consultarPorInicial(UsuarioRepository repository, Scanner scanner) {
 	    System.out.println("\nConsultar pelas Iniciais");
 	    System.out.println("Digite as iniciais");
 	    String iniciais = scanner.nextLine().trim();
-
 	    if (iniciais.isEmpty()) {
 	        System.out.println("Nenhuma inicial foi digitada!");
 	        return;
 	    }
-
 	    List<Usuario> usuarios = repository.consultarPorIniciais(iniciais);
-
 	    if (usuarios.isEmpty()) {
-	        System.out.println("Não existe usuário com essas iniciais!");
+	        System.out.println("Nï¿½o existe usuï¿½rio com essas iniciais!");
 	    } else {
 	        for (Usuario usuario : usuarios) {
 	            System.out.println(usuario.imprimir());
