@@ -63,30 +63,37 @@ public class App {
 	}
 
 	private static void cadastrarUsuario(UsuarioService service, Scanner scanner) {
-		System.out.println("\nCadastro de Usu�rio");
+		System.out.println("\nCadastro de Usuário");
 		System.out.print("Digite o ID: ");
-		
 		int id;
-	    try {
-	    	id = scanner.nextInt();	
+		try {
+			id = scanner.nextInt();
 		} catch (Exception e) {
 			id = -1;
-		}		
-	    scanner.nextLine();
-
+		}
+		scanner.nextLine();
 		System.out.print("Digite o CPF: ");
 		String cpf = scanner.nextLine();
 
 		System.out.print("Digite o Nome: ");
 		String nome = scanner.nextLine();
 
-		Usuario usuario = new Usuario(id, cpf, nome);
+		System.out.print("Digite a Idade: ");
+		int idade;
+		try {
+			idade = scanner.nextInt();
+		} catch (Exception e) {
+			idade = -1;
+		}
+	scanner.nextLine();
+
+		Usuario usuario = new Usuario(id, cpf, nome, idade);
 
 		try {
 			service.cadastrar(usuario);
-			System.out.println("Usu�rio cadastrado com sucesso!");
+			System.out.println("Usuário cadastrado com sucesso!");
 		} catch (Exception e) {
-			System.out.println("Erro ao cadastrar usu�rio: " + e.getMessage());
+			System.out.println("Erro ao cadastrar usuário: " + e.getMessage());
 		}
 	}
 
@@ -151,33 +158,38 @@ public class App {
 	}
 	@SuppressWarnings("unused")
 	private static void atualizarUsuario(UsuarioRepository repository, Scanner scanner, UsuarioService service) {
-	    System.out.println("\nAtualizar Usuario");
-	    System.out.print("Digite o ID do Usuario que deseja atualizar: ");
-	    int id;
-	    try {
-	    	id = scanner.nextInt();	
+		System.out.println("\nAtualizar Usuário");
+		System.out.print("Digite o ID do Usuário que deseja atualizar: ");
+		int id;
+		try {
+			id = scanner.nextInt();
 		} catch (Exception e) {
 			id = -1;
 		}
-	    scanner.nextLine();
-
-	    if (repository.consultarPorId(id) != null) {
-	        System.out.print("Digite o CPF novo: ");
-	        String cpf = scanner.nextLine().trim();
-	        System.out.print("Digite o Nome novo: ");
-	        String nome = scanner.nextLine().trim();
-
-	        Usuario usuario = new Usuario(id, cpf, nome);
-
-	        try {
-	            service.atualizar(usuario);
-	            System.out.println("Usu�rio atualizado com sucesso!");
-	        } catch (Exception e) {
-	            System.out.println("Erro ao atualizar usu�rio: " + e.getMessage());
-	        }
-	    } else {
-	        System.out.println("Esse ID n�o existe no sistema!");
-	    }
+		scanner.nextLine();
+		if (repository.consultarPorId(id) != null) {
+			System.out.print("Digite o CPF novo: ");
+			String cpf = scanner.nextLine().trim();
+			System.out.print("Digite o Nome novo: ");
+			String nome = scanner.nextLine().trim();
+			System.out.print("Digite a Idade nova: ");
+			int idade;
+			try {
+				idade = scanner.nextInt();
+			} catch (Exception e) {
+				idade = -1;
+			}
+			scanner.nextLine();
+			Usuario usuario = new Usuario(id, cpf, nome, idade);
+			try {
+				service.atualizar(usuario);
+				System.out.println("Usuário atualizado com sucesso!");
+			} catch (Exception e) {
+				System.out.println("Erro ao atualizar usuário: " + e.getMessage());
+			}
+		} else {
+			System.out.println("Esse ID não existe no sistema!");
+		}
 	}
 	private static void consultarPorInicial(UsuarioRepository repository, Scanner scanner) {
 	    System.out.println("\nConsultar pelas Iniciais");

@@ -13,10 +13,11 @@ public class Usuario {
 		
 	}
 	
-	public Usuario(int id, String cpf, String nome) {
+	public Usuario(int id, String cpf, String nome, int idade) {
 		this.id = id;
 		this.cpf = cpf;
 		this.nome = nome;
+		this.idade = idade;
 	}
 	
 	public int getId() {
@@ -44,6 +45,6 @@ public class Usuario {
 		this.idade = idade;
 	}
 	public String imprimir() {
-		return "ID:" + this.id + " " + "CPF:" + this.cpf + " " + "Nome:" + this.nome + " ";
+		return "ID:" + this.id + " " + "CPF:" + this.cpf + " " + "Nome:" + this.nome + " " + "Idade:" + this.idade;
 	}
 }

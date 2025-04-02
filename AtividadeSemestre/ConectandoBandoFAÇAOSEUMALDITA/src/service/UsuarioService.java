@@ -21,10 +21,12 @@ public class UsuarioService {
 			throw new Exception("Cpf do usuario invalido: nulo");
 		} else if (usuario.getCpf().trim().equals("")) {
 			throw new Exception("Cpf do usuario invalido: vazio");
-		} else if (usuario.getCpf().length() > 11) {
-			throw new Exception("Cpf do usuario invalido: tamanho excedido");
+		} else if (usuario.getCpf().length() != 11) {
+			throw new Exception("Cpf do usuario invalido: deve ter 11 numeros");
 		} else if (usuario.getIdade() < 0) {
 			throw new Exception("Idade do usuario invalido: não pode ser negativa");
+		} else if (usuario.getIdade() > 120) {
+			throw new Exception("Idade do usuario invalido: tamanho excedido");
 		}
 		try {
 			long cpf = Long.parseLong(usuario.getCpf());
@@ -57,10 +59,12 @@ public class UsuarioService {
 			throw new Exception("Cpf do usuario invalido: nulo");
 		} else if (usuario.getCpf().trim().equals("")) {
 			throw new Exception("Cpf do usuario invalido: vazio");
-		} else if (usuario.getCpf().length() > 11) {
-			throw new Exception("Cpf do usuario invalido: tamanho excedido");
+		} else if (usuario.getCpf().length() != 11) {
+			throw new Exception("Cpf do usuario invalido: deve ter 11 numeros");
 		} else if (usuario.getIdade() < 0) {
 			throw new Exception("Idade do usuario invalido: não pode ser negativa");
+		} else if (usuario.getIdade() > 120) {
+			throw new Exception("Idade do usuario invalido: tamanho excedido");
 		}
 		try {
 			long cpf = Long.parseLong(usuario.getCpf());

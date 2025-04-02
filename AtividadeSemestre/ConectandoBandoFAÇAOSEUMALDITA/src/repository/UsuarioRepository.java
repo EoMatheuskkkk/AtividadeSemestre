@@ -13,9 +13,9 @@ import entidades.Usuario;
 
 public class UsuarioRepository {
 	private Connection conexao;
-	private String CONNECTION_STRING = "jdbc:mysql://localhost:3306/unifacear";
-	private String USUARIO = "root";
-	private String SENHA = "root";
+	private String CONNECTION_STRING = "jdbc:mysql://192.168.100.136:3306/unifacear";
+	private String USUARIO = "Matheus";
+	private String SENHA = "M!159753";
 
 	public UsuarioRepository() {
 		try {
@@ -31,7 +31,7 @@ public class UsuarioRepository {
 		}
 	}
 
-	public void inserir(Usuario usuario) {
+	public void inserir(Usuario usuario) throws Exception {
 		String sql = "INSERT INTO tb_usuarios (ID_Usuario, nome, cpf, idade) VALUES (?, ?, ?, ?);";
 		try (PreparedStatement ps = this.conexao.prepareStatement(sql)) {
 			ps.setInt(1, usuario.getId());
@@ -40,10 +40,9 @@ public class UsuarioRepository {
 			ps.setInt(4, usuario.getIdade());
 			ps.execute();
 		} catch (SQLIntegrityConstraintViolationException e) {
-			System.out.println("Usuário " + usuario.getNome() + " não foi inserido no Banco de dados devido a duplicidade de dados!");
+			throw new Exception("Usuário " + usuario.getNome() + " já está cadastrado!");
 		} catch (SQLException e) {
-			System.out.println("Usuário não foi inserido no banco de dados");
-			e.printStackTrace();
+			throw new Exception("Erro ao inserir usuário no banco de dados.");
 		}
 	}
 
@@ -58,19 +57,21 @@ public class UsuarioRepository {
 		}
 	}
 
-	public void atualizar(Usuario usuario) {
+	public void atualizar(Usuario usuario) throws Exception {
 		String sql = "UPDATE tb_usuarios SET nome=?, cpf=?, idade=? WHERE ID_Usuario = ?";
-		try {
-			PreparedStatement ps = this.conexao.prepareStatement(sql);
+		try (PreparedStatement ps = this.conexao.prepareStatement(sql)) {
 			ps.setString(1, usuario.getNome());
 			ps.setString(2, usuario.getCpf());
 			ps.setInt(3, usuario.getIdade());
 			ps.setInt(4, usuario.getId());
-			ps.execute();
-			System.out.println("Os dados foram atualizados com sucesso");
+			int linhasAfetadas = ps.executeUpdate();
+			if (linhasAfetadas == 0) {
+				throw new Exception("Usuário com ID " + usuario.getId() + " não encontrado para atualização.");
+			}
+		} catch (SQLIntegrityConstraintViolationException e) {
+			throw new Exception("Erro ao atualizar usuário: CPF já cadastrado.");
 		} catch (SQLException e) {
-			System.out.println("Não foi possível atualizar os dados do usuário");
-			e.printStackTrace();
+			throw new Exception("Erro ao atualizar usuário no banco de dados.");
 		}
 	}
 
@@ -151,6 +152,7 @@ public class UsuarioRepository {
 				usuario.setId(rs.getInt("ID_Usuario"));
 				usuario.setNome(rs.getString("nome"));
 				usuario.setCpf(rs.getString("cpf"));
+				usuario.setIdade(rs.getInt("idade"));
 				usuarios.add(usuario);
 			}
 			rs.close();
