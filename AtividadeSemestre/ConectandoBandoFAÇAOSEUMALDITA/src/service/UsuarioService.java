@@ -17,25 +17,18 @@ public class UsuarioService {
 			throw new Exception("Nome do usuario invalido: vazio");
 		} else if (usuario.getNome().length() > 100) {
 			throw new Exception("Nome do usuario invalido: tamanho excedido");
-		} else if (usuario.getCpf() == null) {
-			throw new Exception("Cpf do usuario invalido: nulo");
-		} else if (usuario.getCpf().trim().equals("")) {
-			throw new Exception("Cpf do usuario invalido: vazio");
-		} else if (usuario.getCpf().length() != 11) {
-			throw new Exception("Cpf do usuario invalido: deve ter 11 numeros");
 		} else if (usuario.getIdade() < 0) {
 			throw new Exception("Idade do usuario invalido: não pode ser negativa");
 		} else if (usuario.getIdade() > 120) {
 			throw new Exception("Idade do usuario invalido: tamanho excedido");
+		} else if (usuario.getCpf() == null) {
+			throw new Exception("Cpf do usuario invalido: nulo");
+		} else if (usuario.getCpf().trim().equals("")) {
+			throw new Exception("Cpf do usuario invalido: vazio");
+		} else if (!usuario.getCpf().matches("\\d{11}")) {
+			throw new Exception("Cpf do usuario invalido: deve conter apenas 11 dígitos numéricos");
 		}
-		try {
-			long cpf = Long.parseLong(usuario.getCpf());
-			if (cpf <= 0) {
-				throw new Exception("Cpf do usuario invalido: CPF negativo");
-			}
-		} catch (Exception e) {
-			throw new Exception("Cpf do usuario invalido: deve ser numerico");
-		}
+
 		if (repository.consultarPorCpf(usuario.getCpf()) != null) {
 			throw new Exception("Cpf do usuario já existe");
 		}
@@ -55,27 +48,19 @@ public class UsuarioService {
 			throw new Exception("Nome do usuario invalido: vazio");
 		} else if (usuario.getNome().length() > 100) {
 			throw new Exception("Nome do usuario invalido: tamanho excedido");
-		} else if (usuario.getCpf() == null) {
-			throw new Exception("Cpf do usuario invalido: nulo");
-		} else if (usuario.getCpf().trim().equals("")) {
-			throw new Exception("Cpf do usuario invalido: vazio");
-		} else if (usuario.getCpf().length() != 11) {
-			throw new Exception("Cpf do usuario invalido: deve ter 11 numeros");
 		} else if (usuario.getIdade() < 0) {
 			throw new Exception("Idade do usuario invalido: não pode ser negativa");
 		} else if (usuario.getIdade() > 120) {
 			throw new Exception("Idade do usuario invalido: tamanho excedido");
+		} else if (usuario.getCpf() == null) {
+			throw new Exception("Cpf do usuario invalido: nulo");
+		} else if (usuario.getCpf().trim().equals("")) {
+			throw new Exception("Cpf do usuario invalido: vazio");
+		} else if (!usuario.getCpf().matches("\\d{11}")) {
+			throw new Exception("Cpf do usuario invalido: deve conter apenas 11 dígitos numéricos");
 		}
-		try {
-			long cpf = Long.parseLong(usuario.getCpf());
-			if (cpf <= 0) {
-				throw new Exception("Cpf do usuario invalido: CPF negativo");
-			}
-		} catch (Exception e) {
-			throw new Exception("Cpf do usuario invalido: deve ser numerico");
-		}
-
-		if (repository.consultarPorCpf(usuario.getCpf()) != null) {
+		Usuario existente = repository.consultarPorCpf(usuario.getCpf());
+		if (existente != null && existente.getId() != usuario.getId()) {
 			throw new Exception("Cpf do usuario já existe");
 		}
 		repository.atualizar(usuario);
